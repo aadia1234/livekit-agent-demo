@@ -33,16 +33,17 @@ RUN chown -R appuser /home/appuser/.cache
 
 WORKDIR /home/appuser
 
-COPY requirements.txt .
+COPY livekit-agent/requirements.txt .
 RUN python -m pip install --user --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY livekit-agent/agent.py .
+COPY livekit-agent/.env .
 
 # ensure that any dependent models are downloaded at build-time
-RUN python main.py download-files
+RUN python agent.py download-files
 
 # expose healthcheck port
 EXPOSE 8081
 
 # Run the application.
-CMD ["python", "agent.py", "start"]
+CMD ["python", "agent.py"]
