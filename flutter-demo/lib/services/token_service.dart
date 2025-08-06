@@ -53,6 +53,7 @@ class TokenService {
   // Get the sandbox ID from environment variables
   String? get sandboxId {
     final value = dotenv.env['LIVEKIT_SANDBOX_ID'];
+    debugPrint('LIVEKIT_SANDBOX_ID: $value');
     if (value != null) {
       // Remove unwanted double quotes if present
       return value.replaceAll('"', '');
@@ -61,7 +62,8 @@ class TokenService {
   }
 
   // LiveKit Cloud sandbox API endpoint
-  final String sandboxUrl = 'https://cloud-api.livekit.io/api/sandbox/connection-details';
+  final String sandboxUrl =
+      'https://cloud-api.livekit.io/api/sandbox/connection-details';
 
   /// Main method to get connection details
   /// First tries hardcoded credentials, then falls back to sandbox
@@ -108,11 +110,14 @@ class TokenService {
           final data = jsonDecode(response.body);
           return ConnectionDetails.fromJson(data);
         } catch (e) {
-          debugPrint('Error parsing connection details from LiveKit Cloud sandbox, response: ${response.body}');
-          throw Exception('Error parsing connection details from LiveKit Cloud sandbox');
+          debugPrint(
+              'Error parsing connection details from LiveKit Cloud sandbox, response: ${response.body}');
+          throw Exception(
+              'Error parsing connection details from LiveKit Cloud sandbox');
         }
       } else {
-        debugPrint('Error from LiveKit Cloud sandbox: ${response.statusCode}, response: ${response.body}');
+        debugPrint(
+            'Error from LiveKit Cloud sandbox: ${response.statusCode}, response: ${response.body}');
         throw Exception('Error from LiveKit Cloud sandbox');
       }
     } catch (e) {

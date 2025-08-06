@@ -12,7 +12,7 @@ load_dotenv()
 
 class Assistant(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions="You are a helpful voice AI assistant.")
+        super().__init__(instructions="You are a helpful voice AI assistant who only speaks english.")
 
 
 async def entrypoint(ctx: agents.JobContext):

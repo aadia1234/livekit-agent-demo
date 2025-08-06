@@ -26,7 +26,8 @@ class AppCtrl extends ChangeNotifier {
   final messageCtrl = TextEditingController();
   final messageFocusNode = FocusNode();
 
-  late final sdk.Room room = sdk.Room(roomOptions: const sdk.RoomOptions(enableVisualizer: true));
+  late final sdk.Room room =
+      sdk.Room(roomOptions: const sdk.RoomOptions(enableVisualizer: true));
   late final roomContext = components.RoomContext(room: room);
 
   final tokenService = TokenService();
@@ -61,8 +62,14 @@ class AppCtrl extends ChangeNotifier {
 
     final nowUtc = DateTime.now().toUtc();
     final segment = sdk.TranscriptionSegment(
-        id: uuid.v4(), text: text, firstReceivedTime: nowUtc, lastReceivedTime: nowUtc, isFinal: true, language: 'en');
-    roomContext.insertTranscription(components.TranscriptionForParticipant(segment, lp));
+        id: uuid.v4(),
+        text: text,
+        firstReceivedTime: nowUtc,
+        lastReceivedTime: nowUtc,
+        isFinal: true,
+        language: 'en');
+    roomContext.insertTranscription(
+        components.TranscriptionForParticipant(segment, lp));
 
     await lp.sendText(text, options: sdk.SendTextOptions(topic: 'lk.chat'));
   }
@@ -79,8 +86,9 @@ class AppCtrl extends ChangeNotifier {
   }
 
   void toggleAgentScreenMode() {
-    agentScreenState =
-        agentScreenState == AgentScreenState.visualizer ? AgentScreenState.transcription : AgentScreenState.visualizer;
+    agentScreenState = agentScreenState == AgentScreenState.visualizer
+        ? AgentScreenState.transcription
+        : AgentScreenState.visualizer;
     notifyListeners();
   }
 
@@ -92,8 +100,10 @@ class AppCtrl extends ChangeNotifier {
     try {
       // Generate random room and participant names
       // In a real app, you'd likely use meaningful names
-      final roomName = 'room-${(1000 + DateTime.now().millisecondsSinceEpoch % 9000)}';
-      final participantName = 'user-${(1000 + DateTime.now().millisecondsSinceEpoch % 9000)}';
+      final roomName =
+          'room-${(1000 + DateTime.now().millisecondsSinceEpoch % 9000)}';
+      final participantName =
+          'user-${(1000 + DateTime.now().millisecondsSinceEpoch % 9000)}';
 
       // Get connection details from token service
       final connectionDetails = await tokenService.fetchConnectionDetails(
@@ -101,7 +111,8 @@ class AppCtrl extends ChangeNotifier {
         participantName: participantName,
       );
 
-      print("Fetched Connection Details: $connectionDetails, connecting to room...");
+      print(
+          "Fetched Connection Details: $connectionDetails, connecting to room...");
 
       await room.connect(
         connectionDetails.serverUrl,
@@ -111,8 +122,10 @@ class AppCtrl extends ChangeNotifier {
       print("Connected to room");
 
       await room.localParticipant?.setMicrophoneEnabled(true);
-
       print("Microphone enabled");
+
+      await room.localParticipant?.setCameraEnabled(true);
+      print("Camera enabled");
 
       connectionState = ConnectionState.connected;
       appScreenState = AppScreenState.agent;
